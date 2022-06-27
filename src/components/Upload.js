@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 /* ライブラリ */
 import { uploadImage } from "../lib/firebase";
 
-function Upload({ userImage, onSletctedImage }) {
+function Upload({ userImage, onSelectedImage }) {
   const [isModal, setIsModal] = useState(false);
   const active = isModal ? "is-active" : "";
   const [imageUrl, setImageUrl] = useState(userImage);
@@ -11,7 +11,7 @@ function Upload({ userImage, onSletctedImage }) {
   const handleImage = async event => {
     const image = event.target.files[0];
     const imageUrl = await uploadImage(image);
-    onSletctedImage(imageUrl);
+    onSelectedImage(imageUrl);
     setImageUrl(imageUrl);
   };
 
