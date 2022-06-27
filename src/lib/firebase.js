@@ -2,23 +2,23 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-if (!firebase.apps.length) {
-  const firebaseConfig = {
-    apiKey: "AIzaSyD1_3n5AHachTkTPPYwmkYELsMXBsYCuoQ",
-    authDomain: "fire-k63.firebaseapp.com",
-    projectId: "fire-k63",
-    storageBucket: "fire-k63.appspot.com",
-    messagingSenderId: "120269582384",
-    appId: "1:120269582384:web:89a5e8692360e5d1b7bdf5"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+const firebaseConfig = {
+  apiKey: "AIzaSyD1_3n5AHachTkTPPYwmkYELsMXBsYCuoQ",
+  authDomain: "fire-k63.firebaseapp.com",
+  projectId: "fire-k63",
+  storageBucket: "fire-k63.appspot.com",
+  messagingSenderId: "120269582384",
+  appId: "1:120269582384:web:89a5e8692360e5d1b7bdf5"
 };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
 
 const db = firebase.firestore();
 export const auth = firebase.auth();
@@ -63,7 +63,7 @@ export const clearFirebaseItem = async (item) => {
   }).catch(function(err) {
     console.log(err);
   });
-}; 
+};
 
 export const uiConfig = {
   signInFlow: 'popup',
@@ -89,3 +89,26 @@ export const storeUserInfo = async (user) => {
     };
   }
 }
+
+export const updateUser = async (user, image) => {
+  try {
+    const userDoc = await firebase.firestore().collection("users").doc(user.id).get();
+    if (userDoc.exists) {
+      await firebase.firestore().collection("users").doc(user.id).update({ ...userDoc.data(), image: image });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export const uploadImage = async (image) => {
+  const ref = firebase.storage().ref().child(`/images/${image.name}`);
+  let downloadUrl = "";
+  try {
+    await ref.put(image);
+    downloadUrl = await ref.getDownloadURL();
+  } catch (err) {
+    console.log(err);
+  }
+  return downloadUrl;
+}; 

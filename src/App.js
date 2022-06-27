@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react'
 /* コンポーネント */
 import Todo from './components/Todo';
 import Login from "./components/Login";
-import { auth, storeUserInfo } from "./lib/firebase";
+import Upload from "./components/Upload";
+import { auth, storeUserInfo, updateUser } from "./lib/firebase";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -26,11 +27,16 @@ function App() {
     auth.signOut();
   };
 
+  const handleImageChanged = async downloadUrl => {
+    await updateUser(user, downloadUrl);
+  }
+  
   const HeaderContent = () => {
     if (user) {
       return (
         <div class="navbar-end">
           <div class="navbar-item">
+            <Upload userImage={user.image} onSelectedImage={handleImageChanged} />
             {user.name}
           </div>
           <div class="navbar-item">
